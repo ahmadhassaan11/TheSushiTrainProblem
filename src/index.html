@@ -4,10 +4,85 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>The Sushi Train Problem</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+    }
+
+    header {
+      background-color: #007c29;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 28px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px auto;
+      max-width: 400px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background-color: #fff;
+    }
+
+    input[type="file"] {
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007c29;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #00b368;
+    }
+
+    #result {
+      margin: 20px auto;
+      max-width: 400px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background-color: #fff;
+      text-align: center;
+    }
+
+    .message {
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background-color: #f5f5f5;
+    }
+
+    .error {
+      color: #d32f2f;
+    }
+  </style>
 </head>
 <body>
-  <h1>The Sushi Train Problem</h1>
+  <header>
+    <h1>The Sushi Train Problem</h1>
+  </header>
   <form id="uploadForm">
+  <h3>Please select a file</h3>
     <input type="file" name="file" id="fileInput" accept=".csv">
     <button type="submit">Submit</button>
   </form>
@@ -21,7 +96,7 @@
       const fileInput = document.getElementById('fileInput');
       const file = fileInput.files[0];
       if (!file) {
-        alert('Please select a CSV file.');
+        resultDiv.innerHTML = '<div class="message error">Please select a CSV file.</div>';
         return;
       }
 
@@ -35,14 +110,15 @@
         });
         if (response.ok) {
           const result = await response.text();
-          resultDiv.textContent = `Result: ${result}`;
+          resultDiv.innerHTML = `<div class="message">Result: ${result}</div>`;
         } else {
-          resultDiv.textContent = 'Error calculating the result.';
+          resultDiv.innerHTML = '<div class="message error">Error calculating the result.</div>';
         }
       } catch (error) {
-        resultDiv.textContent = 'Error communicating with the server.';
+        resultDiv.innerHTML = '<div class="message error">Error communicating with the server.</div>';
       }
     });
   </script>
+
 </body>
 </html>

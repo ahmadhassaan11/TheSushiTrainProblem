@@ -1,28 +1,31 @@
 const express = require('express');
-const multer = require('multer');
+const path = require('path');
+const multer = require('multer'); // For handling file uploads
 const calculateTraysOnSushiTrain = require('./sushiTrain');
 
 const app = express();
-const upload = multer();
 
-// Serve the static files (including index.html) from the 'src' directory
-app.use(express.static(__dirname + '/src'));
+// Setting up Multer to handle file uploads
+const upload = multer({ dest: 'uploads/' });
 
-// Defining POST endpoint for calculating trays
+// Serving the frontend HTML file
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Endpoint for calculating trays on sushi train
 app.post('/calculate', upload.single('file'), async (req, res) => {
+  const filePath = req.file.path; // Path to the uploaded file
   try {
-    const result = await calculateTraysOnSushiTrain(req.file.buffer.toString());
-    res.send(result.toString());
+    const result = await calculateTraysOnSushiTrain(filePath);
+    res.send(result.toString()); // Send the result back as a string
   } catch (error) {
-    res.status(500).send('Error processing the file.');
+    console.error('Error calculating the result:', error);
+    res.status(500).send('Error calculating the result.');
   }
 });
 
-// Defining GET endpoint to load the UI page
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
-
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000');
+const port = 3000; 
+app.listen(port, () => {
+  console.log(`Server started on port ${port}`);
 });
